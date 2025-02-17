@@ -8,8 +8,6 @@ dotenv.config();
 
 const GOOGLE_SHEETS_ID = process.env.GOOGLE_SHEETS_ID || "";
 
-const credentialsPath = path.join(__dirname, "../google-service-account.json");
-
 const credentials = JSON.parse(
   Buffer.from(process.env.GOOGLE_SERVICE_ACCOUNT!, "base64").toString("utf8")
 );
