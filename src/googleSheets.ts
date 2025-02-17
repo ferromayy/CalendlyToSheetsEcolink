@@ -10,7 +10,10 @@ const GOOGLE_SHEETS_ID = process.env.GOOGLE_SHEETS_ID || "";
 
 const credentialsPath = path.join(__dirname, "../google-service-account.json");
 
-const credentials = JSON.parse(fs.readFileSync(credentialsPath, "utf8"));
+const credentials = JSON.parse(
+  Buffer.from(process.env.GOOGLE_SERVICE_ACCOUNT!, "base64").toString("utf8")
+);
+console.log(credentials, "me llega aca la contraseña");
 const auth = new JWT({
   email: credentials.client_email,
   key: credentials.private_key,
