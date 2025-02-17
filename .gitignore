@@ -1,0 +1,7 @@
+# Ignorar credenciales privadas
+google-service-account.json
+
+# Ignorar dependencias y compilaciones
+node_modules/
+dist/
+.env
