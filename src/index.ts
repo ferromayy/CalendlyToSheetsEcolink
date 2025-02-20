@@ -40,10 +40,12 @@ app.post("/webhook/calendly", async (req, res) => {
       ? new Date(eventData.scheduled_event.start_time)
       : null;
 
-      const formattedDate = startTime
-      ? `${startTime.getDate()}/${startTime.getMonth() + 1}/${startTime.getFullYear()}`
+    const formattedDate = startTime
+      ? `${startTime.getDate()}/${
+          startTime.getMonth() + 1
+        }/${startTime.getFullYear()}`
       : "0";
-    
+
     // const formattedPhone =
     //   answers.length > 0
     //     ? answers[0].replace(/[\s-]/g, "") // Elimina espacios y guiones
@@ -56,11 +58,14 @@ app.post("/webhook/calendly", async (req, res) => {
     //   answers.length > 0 ? formatPhoneNumber(answers[0]) : "0";
 
     const formattedTime = startTime
-      ? startTime.toLocaleTimeString("es-AR", {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: false,
-        })
+      ? new Date(startTime.getTime() - 3 * 60 * 60 * 1000).toLocaleTimeString(
+          "es-AR",
+          {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          }
+        )
       : "0";
 
     console.log("startTime", formattedDate);
