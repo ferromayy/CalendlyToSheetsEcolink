@@ -1,8 +1,7 @@
 import { GoogleSpreadsheet } from "google-spreadsheet";
 import { JWT } from "google-auth-library";
 import dotenv from "dotenv";
-import fs from "fs";
-import path from "path";
+
 
 dotenv.config();
 
