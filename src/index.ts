@@ -40,11 +40,10 @@ app.post("/webhook/calendly", async (req, res) => {
       ? new Date(eventData.scheduled_event.start_time)
       : null;
 
-    const formattedDate = startTime
-      ? `${startTime.getFullYear()}-${
-          startTime.getMonth() + 1
-        }-${startTime.getDate()}`
+      const formattedDate = startTime
+      ? `${startTime.getDate()}/${startTime.getMonth() + 1}/${startTime.getFullYear()}`
       : "0";
+    
     // const formattedPhone =
     //   answers.length > 0
     //     ? answers[0].replace(/[\s-]/g, "") // Elimina espacios y guiones
