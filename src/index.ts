@@ -5,6 +5,9 @@ import { appendToSheet } from "./googleSheets";
 
 dotenv.config();
 
+console.log("Sheets ID:", process.env.GOOGLE_SHEETS_ID);
+console.log("Service Account exists:", !!process.env.GOOGLE_SERVICE_ACCOUNT);
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
