@@ -28,6 +28,10 @@ function formatPhoneNumber(phone: string): string {
 }
 
 app.post("/webhook/calendly", async (req, res) => {
+  console.log("🚨🚨🚨 WEBHOOK HIT 🚨🚨🚨");
+  console.log("Timestamp:", new Date().toISOString());
+  console.log("Headers:", JSON.stringify(req.headers, null, 2));
+  console.log("Body RAW:", req.body);
   try {
     const eventData = req.body.payload || {};
     console.log("este es el array que llega");
