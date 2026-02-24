@@ -11,6 +11,10 @@ const credentials = JSON.parse(
   Buffer.from(process.env.GOOGLE_SERVICE_ACCOUNT!, "base64").toString("utf8")
 );
 console.log(credentials, "me llega aca la contraseña");
+console.log(
+  "🔑 PRIVATE KEY LENGTH:",
+  credentials.private_key?.length
+);
 const auth = new JWT({
   email: credentials.client_email,
   key: credentials.private_key.replace(/\\n/g, "\n"),
