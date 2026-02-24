@@ -35,9 +35,19 @@ app.post("/webhook/calendly-v2", async (req, res) => {
   console.log("HEADERS:", req.headers);
   console.log("BODY RAW:", JSON.stringify(req.body, null, 2));
   try {
-    const eventData = req.body.payload || {};
-    console.log("este es el array que llega");
+    const eventType = req.body.event;
+    const eventData = req.body.payload;
+    
+    if (!eventData) {
+      console.log("⚠️ Webhook sin payload (probablemente verificación)");
+      return res.status(200).send("ok");
+    }
 
+    console.log("EVENT TYPE:", eventType);
+    console.log("PAYLOAD:", JSON.stringify(eventData, null, 2));
+
+
+    
     const questionsAndAnswers = eventData.questions_and_answers || [];
     const answers = questionsAndAnswers.map(
       (qa: any) => qa.answer || "No answer"
