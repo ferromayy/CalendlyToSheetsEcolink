@@ -30,72 +30,79 @@ function formatPhoneNumber(phone: string): string {
   return cleanedPhone;
 }
 
+async function handleCalendlyWebhook(req: express.Request, res: express.Response) {
+  const eventData = req.body.payload || req.body || {};
+  console.log("este es el array que llega");
+
+  const questionsAndAnswers = eventData.questions_and_answers || [];
+  const answers = questionsAndAnswers.map(
+    (qa: any) => qa.answer || "No answer"
+  );
+  const startTime = eventData.scheduled_event?.start_time
+    ? new Date(eventData.scheduled_event.start_time)
+    : null;
+
+  const formattedDate = startTime
+    ? `${startTime.getDate()}/${
+        startTime.getMonth() + 1
+      }/${startTime.getFullYear()}`
+    : "0";
+
+  const formattedPhone =
+    answers.length > 0 ? formatPhoneNumber(answers[0]) : "0";
+
+  const formattedTime = startTime
+    ? new Date(startTime.getTime() - 3 * 60 * 60 * 1000).toLocaleTimeString(
+        "es-AR",
+        {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        }
+      )
+    : "0";
+
+  console.log("startTime", formattedDate);
+  console.log("formattedPhone:", formattedPhone);
+  console.log("startTime", formattedTime);
+
+  const rowData = {
+    Turno: eventData.scheduled_event?.name.toString() ?? "0",
+    Nombre: eventData.name?.toString() ?? "0",
+    Telefono: formattedPhone.toString() ?? "0",
+    Dia: formattedDate,
+    Hora: formattedTime.toString() ?? "0",
+  };
+
+  console.log(
+    rowData,
+    "aca te paso toda la data que deberia llegar a apreadshee"
+  );
+
+  await appendToSheet(rowData);
+
+  res.status(200).send("Webhook received");
+}
+
 app.post("/webhook/calendly", async (req, res) => {
   try {
-    const eventData = req.body.payload || {};
-    console.log("este es el array que llega");
-
-    const questionsAndAnswers = eventData.questions_and_answers || [];
-    const answers = questionsAndAnswers.map(
-      (qa: any) => qa.answer || "No answer"
-    );
-    const startTime = eventData.scheduled_event?.start_time
-      ? new Date(eventData.scheduled_event.start_time)
-      : null;
-
-    const formattedDate = startTime
-      ? `${startTime.getDate()}/${
-          startTime.getMonth() + 1
-        }/${startTime.getFullYear()}`
-      : "0";
-
-    // const formattedPhone =
-    //   answers.length > 0
-    //     ? answers[0].replace(/[\s-]/g, "") // Elimina espacios y guiones
-    //     : "0";
-
-    const formattedPhone =
-      answers.length > 0 ? formatPhoneNumber(answers[0]) : "0";
-
-    // const formattedPhone =
-    //   answers.length > 0 ? formatPhoneNumber(answers[0]) : "0";
-
-    const formattedTime = startTime
-      ? new Date(startTime.getTime() - 3 * 60 * 60 * 1000).toLocaleTimeString(
-          "es-AR",
-          {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false,
-          }
-        )
-      : "0";
-
-    console.log("startTime", formattedDate);
-    console.log("formattedPhone:", formattedPhone);
-    console.log("startTime", formattedTime);
-
-    const rowData = {
-      Turno: eventData.scheduled_event?.name.toString() ?? "0",
-      Nombre: eventData.name?.toString() ?? "0",
-      Telefono: formattedPhone.toString() ?? "0",
-      //hacer logica para dividir y que ingrese con mismo formato
-      Dia: formattedDate,
-      Hora: formattedTime.toString() ?? "0",
-    };
-
-    console.log(
-      rowData,
-      "aca te paso toda la data que deberia llegar a apreadshee"
-    );
-
-    // Guardar en Google Sheets
-    await appendToSheet(rowData);
-
-    res.status(200).send("Webhook received");
+    await handleCalendlyWebhook(req, res);
   } catch (error) {
     console.error(
       "Error procesando el webhook:",
+      (error as any).message || error
+    );
+    res.status(500).send("Hubo un error procesando el webhook.");
+  }
+});
+
+// Calendly puede estar registrado con esta URL; sin esta ruta los hooks no llegan
+app.post("/webhook/calendly-v2", async (req, res) => {
+  try {
+    await handleCalendlyWebhook(req, res);
+  } catch (error) {
+    console.error(
+      "Error procesando el webhook (calendly-v2):",
       (error as any).message || error
     );
     res.status(500).send("Hubo un error procesando el webhook.");
