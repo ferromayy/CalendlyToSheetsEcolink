@@ -30,7 +30,7 @@ function formatPhoneNumber(phone: string): string {
   return cleanedPhone;
 }
 
-app.post("/webhook/calendly", async (req, res) => {
+app.post("/webhook/calendly-v2", async (req, res) => {
   console.log("🚨 WEBHOOK HIT 🚨");
   console.log("HEADERS:", req.headers);
   console.log("BODY RAW:", JSON.stringify(req.body, null, 2));
