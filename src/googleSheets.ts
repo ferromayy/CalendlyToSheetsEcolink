@@ -24,7 +24,13 @@ const auth = new JWT({
 const doc = new GoogleSpreadsheet(GOOGLE_SHEETS_ID, auth);
 
 export async function appendToSheet(data: any) {
+  console.log("📄 appendToSheet called");
   await doc.loadInfo();
+  console.log("📘 Spreadsheet loaded:", doc.title);
   const sheet = doc.sheetsByIndex[0]; // Usa la primera hoja
+  console.log("📗 Using sheet:", sheet.title);
+
+  console.log("🧾 Headers:", sheet.headerValues);
   await sheet.addRow(data);
+  console.log("✅ Row added");
 }
