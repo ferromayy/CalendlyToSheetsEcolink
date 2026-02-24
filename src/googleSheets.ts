@@ -13,7 +13,7 @@ const credentials = JSON.parse(
 console.log(credentials, "me llega aca la contraseña");
 const auth = new JWT({
   email: credentials.client_email,
-  key: credentials.private_key,
+  key: credentials.private_key.replace(/\\n/g, "\n"),
   scopes: ["https://www.googleapis.com/auth/spreadsheets"],
 });
 
