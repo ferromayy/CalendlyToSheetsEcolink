@@ -105,3 +105,9 @@ app.post("/webhook/calendly", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+app.post("/test", (req, res) => {
+  console.log("🔥 TEST ENDPOINT HITtttttttttttt");
+  console.log(req.body);
+  res.send("ok");
+});
